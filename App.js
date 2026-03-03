@@ -1,106 +1,81 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 
-export function TodoItem(props){
-  return (
-      <View style={styles.todoItem}>
-        <Text style={styles.todoText}>{props.task}</Text>
-      </View>
-  );
-}
+import { StyleSheet, Text, View, TextInput, Button, Alert } from 'react-native';
+import StudentCard,{CourseCard} from './Components/StudentCard'
+import {useState} from 'react'
+import StudentForm from './Components/StudentForm';
+
+
 
 export default function App() {
-  const [task, setTask] = useState('');
-  const [todoList, setTodoList] = useState([]);
 
-  const addTask = () => {
-    if (task.trim() === '') {
-      return;
-    }
+  const [studentList,setStudentList]=useState([
+    {id:1, name:"Patrick",course:"CpE",year:"4th Year", enrolled:true},
+    {id:2, name:"Chiz",course:"IT",year:"3rd Year", enrolled:false},
+    {id:3, name:"Gran",course:"CS",year:"2nd Year", enrolled:true},
+    {id:4, name:"Marr",course:"ICT",year:"3rd Year", enrolled:false}
+  ])
+
+  const [id,setId]=useState('')
+  const [name,setName]=useState('')
+  const [course,setCourse]=useState('')
+  const [year,setYear]=useState('')
+
+  const addStudent=()=>{
+    let i=0;
+   for(;i<studentList.length && studentList[i].id != id;i++){}
+  if(i>=studentList.length){
+      const toAdd = {id:id,name:name,course:course,year:year}
+      setStudentList([...studentList,toAdd])
+      
+      Alert.alert("Student Added", `Name:${name} Course:${course} Year:${year}`)
+  }else{
+    Alert.alert("ID already exists", "Please enter a unique ID")
+  }
+}
+
+  const changeEnrolledStatus=(val,studentId)=>{
+    setStudentList(previousList=>
+      previousList.map((student)=>
+        student.id===studentId ? {...student, enrolled:val} : student
+      )
+    )
+
+    // const newlist = [...studentList];
+
+    // for(let i=0; i<newlist.length;i++){
+    //   if(newlist[i].id == studentId){
+    //     newlist[i].enrolled = val}
+    //   }
     
-    setTodoList([...todoList, { title: task }]);
-    setTask('');
-  };
+    // setStudentList(newlist)
+    console.log("Test", studentId, val)
+  }
+
 
   return (
-    <View style={styles.background}>
-      <Text style={{marginTop:35, marginLeft:170, fontSize:10}}>@Aldrin 2026</Text>
-      <Text style={styles.title}>Todo List</Text>
-      <View style={styles.inline}>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter new task"
-          value={task}
-          onChangeText={(text) => setTask(text)}
-        />
-        <TouchableOpacity style={styles.button} onPress={() => { alert('New Task: ' + task); addTask(); }}>
-          <Text style={{fontSize:20}}>Enter</Text>
-        </TouchableOpacity>
-      </View>
-      {todoList.map((task, index) => {
-          return(
-            <TodoItem key={index} task={task.title}></TodoItem>
-          )
-        })
-      }
+
+    <View style={styles.container}>
+
+  
+    {studentList.map((student,index)=>{
+      return(
+        <StudentCard key={index} id={student.id} changeEnrolled={changeEnrolledStatus} name={student.name} course={student.course} year={student.year} isEnrolled={student.enrolled}/>
+      )
       
+  })}
+
+   <StudentForm onChangeID={setId} onChangeName={setName} onChangeCourse={setCourse} onChangeYear={setYear} addStudent={addStudent} />
     </View>
+ 
+   
   );
 }
 
-
-
 const styles = StyleSheet.create({
-  background: {
+  container: {
     flex: 1,
-    backgroundColor: '#5cbada',
-  },
-  title: {
+    backgroundColor: '#fff',
     alignItems: 'center',
-    marginTop: 250,
-    marginLeft: 90,
-    fontSize: 50,
-    fontWeight: 'bold',
-  },  
-  inline: {
-    flexDirection: 'row',
+    justifyContent: 'center',
   },
-  input: {
-    height: 40,
-    width: 200,
-    margin: 12,
-    marginTop: 20,
-    marginLeft: 40,
-    borderWidth: 1.5,
-    padding: 10,
-    borderRadius: 15,
-    backgroundColor: '#DDDDDD',
-  },
-  button: {
-    alignItems: 'center',
-    backgroundColor: '#459fdb',
-    padding: 8,
-    borderRadius: 15,
-    height: 40,
-    width: 100,
-    marginTop: 20,
-    marginRight: 60,
-  },todoItem: {
-    // backgroundColor: '#d4ca9b',
-    backgroundColor: '#afdc9a',
-    padding: 10,
-    // borderWidth: ,
-    marginVertical: 5,
-    marginHorizontal: 40,
-    borderRadius: 15,
-  },
-  todoText: {
-   fontSize: 20,
-  }
- 
 });
-
-
-
-  
-  git config --global user.name "Aldrin Bonganay"
