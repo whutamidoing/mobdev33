@@ -33,16 +33,6 @@ export default function App() {
         student.id === studentId ? { ...student, enrolled: val } : student,
       ),
     );
-
-    // const newlist = [...studentList];
-
-    // for(let i=0; i<newlist.length;i++){
-    //   if(newlist[i].id == studentId){
-    //     newlist[i].enrolled = val}
-    //   }
-
-    // setStudentList(newlist)
-    console.log("Test", studentId, val);
   };
 
   return (
